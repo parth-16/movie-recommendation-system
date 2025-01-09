@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Recommendation System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+  <div class="hero-section">
+    <h2>Welcome to the Movie Recommendation System</h2>
+    <p>Find the perfect movie recommendations tailored to your taste. Simply type the name of a movie and I will do the rest!</p>
+  </div>
+
+  <div class="search-container">
+    <form action="/results" method="POST" class="text-center">
+      <div class="mb-3">
+        <input 
+          type="text" 
+          id="movie-input"
+          name="title" 
+          class="form-control form-control-lg" 
+          placeholder="Enter a movie name..." 
+          required>
+        <div id="suggestions" class="suggestions"></div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg">Find Recommendations</button>
+    </form>
+  </div>
+
+  <div class="about-section">
+    <h3>About Me</h3>
+    <p>
+      Hi! I'm Parth, a passionate developer who loves movies and technology. 
+      This website leverages Machine Learning and the TMDB API to provide personalized movie recommendations. 
+      Feel free to explore and discover your next favorite film!
+    </p>
+  </div>
+
+  <footer>
+    <p>© 2025 Movie Recommendation System | Designed by Parth Batavia</p>
+    <p>
+      <a href="https://github.com/"><i class="fa fa-github"></i> GitHub</a> | 
+      <a href="mailto:email@example.com"><i class="fa fa-envelope"></i> Email</a> | 
+      <a href="https://linkedin.com/"><i class="fa fa-linkedin"></i> LinkedIn</a>
+    </p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.querySelector("input[name='title']");
+        const suggestionsBox = document.createElement("div");
+        suggestionsBox.style.position = "absolute";
+        suggestionsBox.style.background = "#fff";
+        suggestionsBox.style.border = "1px solid #ccc";
+        suggestionsBox.style.maxHeight = "200px";
+        suggestionsBox.style.overflowY = "auto";
+        suggestionsBox.style.zIndex = "1000";
+        document.body.appendChild(suggestionsBox);
+
+        searchInput.addEventListener("input", function () {
+            const query = searchInput.value.trim();
+            if (query.length < 3) {
+                suggestionsBox.innerHTML = "";
+                suggestionsBox.style.display = "none";
+                return;
+            }
+
+            fetch(`/search-suggestions?query=${encodeURIComponent(query)}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    suggestionsBox.innerHTML = "";
+                    data.forEach((title) => {
+                        const suggestionItem = document.createElement("div");
+                        suggestionItem.textContent = title;
+                        suggestionItem.style.padding = "8px";
+                        suggestionItem.style.cursor = "pointer";
+                        suggestionItem.addEventListener("click", () => {
+                            searchInput.value = title;
+                            suggestionsBox.innerHTML = "";
+                            suggestionsBox.style.display = "none";
+                        });
+                        suggestionsBox.appendChild(suggestionItem);
+                    });
+                    suggestionsBox.style.display = "block";
+                    const rect = searchInput.getBoundingClientRect();
+                    suggestionsBox.style.left = `${rect.left}px`;
+                    suggestionsBox.style.top = `${rect.bottom}px`;
+                    suggestionsBox.style.width = `${rect.width}px`;
+                })
+                .catch((error) => console.error("Error fetching suggestions:", error));
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!suggestionsBox.contains(e.target) && e.target !== searchInput) {
+                suggestionsBox.innerHTML = "";
+                suggestionsBox.style.display = "none";
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

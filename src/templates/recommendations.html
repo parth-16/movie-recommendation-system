@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> 
+</head>
+<body>
+    <h1>Movie Recommendations</h1>
+    <div class="movies-container">
+        {% for movie in recommendations %}
+        <div class="movie-card">
+            <a href="{{ movie.tmdb_link }}" target="_blank" class="movie-title">
+                {{ movie.title }}
+            </a>
+
+            <div class="movie-info">
+                <p><strong>Genres:</strong> {{ movie.genres }}</p>
+                <p><strong>Overview:</strong> {{ movie.overview }}</p>
+                <p><strong>Cast:</strong> {{ movie.cast }}</p>
+                <p><strong>Director:</strong> {{ movie.director }}</p>
+                <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+                <p><strong>Runtime:</strong> {{ movie.runtime }}</p>
+                <p><strong>Language:</strong> {{ movie.language }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

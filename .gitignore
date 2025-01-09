@@ -1,0 +1,25 @@
+# Python files
+*.pyc
+__pycache__/
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# Virtual environments
+venv/
+
+# IDEs and editors
+.idea/
+.vscode/
+
+# Temporary/System files
+*.tmp
+*.bak
+*.swp
+
+# Static or generated files
+static/
+
